@@ -193,6 +193,7 @@ jobs:
 #      - run:
 #          name: Download Dependencies
 #          command: ./gradlew androidDependencies
+      - run: docker --version || true
       - run:
           name: Lists installed targets
           command: android list target
@@ -203,7 +204,9 @@ jobs:
           command: sdkmanager --list --verbose | grep system-images
       - run:
           name: Setup Emulator
-          command: sdkmanager "system-images;android-21;default;armeabi-v7a" && echo "no" | avdmanager create avd -n test -k "system-images;android-21;default;armeabi-v7a"
+          command: |
+            yes | sdkmanager "system-images;android-21;default;armeabi-v7a"
+            echo "no" | avdmanager create avd -n test -k "system-images;android-21;default;armeabi-v7a"
       - run:
           name: Launch Emulator
           command: |
