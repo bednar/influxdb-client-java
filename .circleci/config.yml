@@ -193,7 +193,7 @@ workflows:
   version: 2
   build:
     jobs:
-      - tests-jdk-8
+      - tests-jdk-8:
           name: jdk-8-beta
       - tests-jdk-11:
           name: jdk-11-beta
