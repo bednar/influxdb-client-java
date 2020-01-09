@@ -24,16 +24,6 @@ version: 2.1
 
 commands:
   influxdb-restart:
-    parameters:
-      influxdb-repository:
-        type: string
-        default: &default-influxdb-repository "influxdb"
-      influxdb-version:
-        type: string
-        default: &default-influxdb-version "2.0.0-beta"
-#    environment:
-#      INFLUXDB_V2_REPOSITORY: << parameters.influxdb-repository >>
-#      INFLUXDB_V2_VERSION: << parameters.influxdb-version >>
     steps:
       - run:
           name: "Start InfluxDB service"
@@ -134,18 +124,15 @@ jobs:
     parameters:
       influxdb-repository:
         type: string
-        default: *default-influxdb-repository
+        default: "influxdb"
       influxdb-version:
         type: string
-        default: *default-influxdb-version
+        default: "2.0.0-beta"
     environment:
       INFLUXDB_V2_REPOSITORY: << parameters.influxdb-repository >>
       INFLUXDB_V2_VERSION: << parameters.influxdb-version >>
     steps:
       - prepare
-#          environment:
-#            INFLUXDB_V2_REPOSITORY: << parameters.influxdb-repository >>
-#            INFLUXDB_V2_VERSION: << parameters.influxdb-version >>
       - client-test:
           maven-container: "3-jdk-11-slim"
       - storing-test-results
@@ -207,17 +194,18 @@ workflows:
   build:
     jobs:
       - tests-jdk-8
+          name: jdk-8-beta
       - tests-jdk-11:
-          name: tests-jdk-11-beta
+          name: jdk-11-beta
       - tests-jdk-11:
-          name: tests-jdk-11-nightly
+          name: jdk-11-nightly
           influxdb-repository: "influx"
           influxdb-version: "nightly"
       - deploy-snapshot:
           requires:
-            - tests-jdk-8
-            - tests-jdk-11-beta
-            - tests-jdk-11-nightly
+            - jdk-8-beta
+            - jdk-11-beta
+            - jdk-11-nightly
           filters:
             branches:
               only: master
