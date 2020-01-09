@@ -31,9 +31,9 @@ commands:
       influxdb-version:
         type: string
         default: &default-influxdb-version "2.0.0-beta"
-    environment:
-      INFLUXDB_V2_REPOSITORY: << parameters.influxdb-repository >>
-      INFLUXDB_V2_VERSION: << parameters.influxdb-version >>
+#    environment:
+#      INFLUXDB_V2_REPOSITORY: << parameters.influxdb-repository >>
+#      INFLUXDB_V2_VERSION: << parameters.influxdb-version >>
     steps:
       - run:
           name: "Start InfluxDB service"
@@ -138,10 +138,14 @@ jobs:
       influxdb-version:
         type: string
         default: *default-influxdb-version
+    environment:
+      INFLUXDB_V2_REPOSITORY: << parameters.influxdb-repository >>
+      INFLUXDB_V2_VERSION: << parameters.influxdb-version >>
     steps:
-      - prepare:
-          influxdb-repository: << parameters.influxdb-repository >>
-          influxdb-version:  << parameters.influxdb-version >>
+      - prepare
+#          environment:
+#            INFLUXDB_V2_REPOSITORY: << parameters.influxdb-repository >>
+#            INFLUXDB_V2_VERSION: << parameters.influxdb-version >>
       - client-test:
           maven-container: "3-jdk-11-slim"
       - storing-test-results
